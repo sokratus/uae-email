@@ -84,6 +84,10 @@ function validateEmail(email) {
 
 // Find the closest matching domain
 function findClosestDomain(inputDomain) {
+  if (domains.includes(inputDomain.toLowerCase())) {
+    return inputDomain.toLowerCase(); // Return the input domain if it's already in the list
+  }
+
   let closestDomain = null;
   let minDistance = Infinity;
 
@@ -143,6 +147,26 @@ function levenshteinDistance(a, b) {
   return matrix[b.length][a.length];
 }
 
+// Function to show toast message
+function showToast(message, backgroundColor = "green") {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  toast.style.backgroundColor = backgroundColor;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 100);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 300);
+  }, 3000);
+}
+
 // Event listener for email input
 emailInput.addEventListener("input", function () {
   const inputValue = this.value;
@@ -192,10 +216,25 @@ suggestions.addEventListener("click", function (e) {
   }
 });
 
-// Event listener for keyboard navigation of suggestions
+// Event listener for keyboard navigation of suggestions and email validation
 emailInput.addEventListener("keydown", function (e) {
   const suggestionItems = suggestions.getElementsByClassName("suggestion");
-  if (suggestionItems.length === 0) return;
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+    if (selectedIndex !== -1 && suggestionItems.length > 0) {
+      const selectedSuggestion = suggestionItems[selectedIndex];
+      const inputPart =
+        selectedSuggestion.querySelector(".suggestion-input").textContent;
+      const completionPart = selectedSuggestion.querySelector(
+        ".suggestion-completion"
+      ).textContent;
+      emailInput.value = inputPart + completionPart;
+      suggestions.style.display = "none";
+    }
+    validateAndContinue();
+    return;
+  }
 
   if (e.key === "ArrowDown") {
     e.preventDefault();
@@ -206,28 +245,11 @@ emailInput.addEventListener("keydown", function (e) {
     selectedIndex =
       (selectedIndex - 1 + suggestionItems.length) % suggestionItems.length;
     updateSelection(suggestionItems);
-  } else if (e.key === "Enter" && selectedIndex !== -1) {
-    e.preventDefault();
-    const selectedSuggestion = suggestionItems[selectedIndex];
-    const inputPart =
-      selectedSuggestion.querySelector(".suggestion-input").textContent;
-    const completionPart = selectedSuggestion.querySelector(
-      ".suggestion-completion"
-    ).textContent;
-    emailInput.value = inputPart + completionPart;
-    suggestions.style.display = "none";
   }
 });
 
-// Update the visual selection of suggestions
-function updateSelection(items) {
-  for (let i = 0; i < items.length; i++) {
-    items[i].classList.toggle("selected", i === selectedIndex);
-  }
-}
-
-// Event listener for continue button
-continueButton.addEventListener("click", function () {
+// Function to validate email and continue
+function validateAndContinue() {
   const email = emailInput.value;
   const [username, domain] = email.split("@");
 
@@ -244,8 +266,19 @@ continueButton.addEventListener("click", function () {
     showError();
   } else {
     console.log("Continuing with:", email);
+    showToast("Continuing with valid email: " + email);
   }
-});
+}
+
+// Update the visual selection of suggestions
+function updateSelection(items) {
+  for (let i = 0; i < items.length; i++) {
+    items[i].classList.toggle("selected", i === selectedIndex);
+  }
+}
+
+// Event listener for continue button
+continueButton.addEventListener("click", validateAndContinue);
 
 // Show error message
 function showError() {
@@ -262,20 +295,24 @@ function hideError() {
 // Event listener for correcting email in modal
 correctEmailBtn.addEventListener("click", function () {
   const email = emailInput.value;
-  const [username, _] = email.split("@");
-  emailInput.value = `${username}@${suggestedDomain.textContent}`;
+  const [username, domain] = email.split("@");
+  const updatedEmail = `${username}@${suggestedDomain.textContent}`;
+  emailInput.value = updatedEmail;
   modal.style.display = "none";
   hideError();
+  showToast(`Continuing with valid SLD: ${suggestedDomain.textContent}`); // Updated line
 });
 
 // Event listener for keeping original email in modal
 keepOriginalBtn.addEventListener("click", function () {
   modal.style.display = "none";
-  if (!validateEmail(emailInput.value)) {
+  const originalEmail = emailInput.value;
+  if (!validateEmail(originalEmail)) {
     showError();
   } else {
     hideError();
-    console.log("Continuing with:", emailInput.value);
+    const typedDomain = originalEmail.split("@")[1];
+    showToast(`Continuing with invalid SLD: ${typedDomain}`, "orange");
   }
 });
 
