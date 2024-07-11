@@ -30,6 +30,7 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  height: 48px;
 }
 .suggestions {
   position: absolute;
@@ -66,6 +67,7 @@ input {
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  height: 48px;
 }
 .modal {
   display: none;
