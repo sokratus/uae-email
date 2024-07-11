@@ -264,6 +264,8 @@ function validateAndContinue() {
     modal.style.display = "block";
   } else if (!validateEmail(email)) {
     showError();
+  } else if (!domains.includes(domain.toLowerCase())) {
+    showToast(`${domain} might be a valid domain but not 100% certain`, "orange");
   } else {
     console.log("Continuing with:", email);
     showToast("Continuing with valid email: " + email);

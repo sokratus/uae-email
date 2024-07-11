@@ -153,8 +153,8 @@ input[type="email"]:focus-visible {
 /* Add this CSS to your stylesheet */
 .toast {
   visibility: hidden;
-  min-width: 250px;
-  margin-left: -125px;
+  width: 100%; /* Full width on mobile */
+  max-width: 500px; /* Max width for larger screens */
   background-color: #01853f;
   color: #fff;
   text-align: center;
@@ -163,13 +163,15 @@ input[type="email"]:focus-visible {
   position: fixed;
   z-index: 1;
   left: 50%;
-  top: 30px;
+  top: 0; /* Start from the top */
+  transform: translateX(-50%) translateY(-100%); /* Center horizontally and hide above the viewport */
   font-size: 17px;
   opacity: 0;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.3s;
 }
 
 .toast.show {
   visibility: visible;
   opacity: 1;
+  transform: translateX(-50%) translateY(0); /* Slide down into view */
 }
