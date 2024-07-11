@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Domain Suggestion</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sign in or register</h1>
+      <div class="input-container">
+        <input
+          type="email"
+          id="emailInput"
+          placeholder="Email address"
+          autocomplete="off"
+        />
+        <div class="suggestions" id="suggestions"></div>
+      </div>
+      <div id="errorMessage" class="error-message" style="display: none">
+        <span class="error-icon">&#x2718;</span> Please enter a valid email
+        address
+      </div>
+      <button id="continueButton">Continue</button>
+    </div>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Did you mean "<span id="suggestedDomain"></span>"?</h2>
+        <button id="correctEmail">Yes, correct my email</button>
+        <button id="keepOriginal">No, don't correct</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

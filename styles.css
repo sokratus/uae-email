@@ -1,0 +1,134 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+.container {
+  width: 300px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.input-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.suggestions {
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  display: none;
+  box-sizing: border-box;
+}
+.suggestion {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+}
+.suggestion:hover,
+.suggestion.selected {
+  background-color: #f0f0f0;
+}
+.suggestion-input {
+  color: #888;
+}
+.suggestion-completion {
+  color: #000;
+  font-weight: bold;
+}
+#continueButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 8px;
+}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+#correctEmail,
+#keepOriginal {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+#correctEmail {
+  background-color: #000;
+  color: #fff;
+}
+#keepOriginal {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+.error-message {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+.error-icon {
+  margin-right: 5px;
+  font-size: 18px;
+}
+.input-container.error input {
+  border-color: #d32f2f;
+}
