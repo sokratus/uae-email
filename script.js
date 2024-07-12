@@ -293,12 +293,12 @@ emailInput.addEventListener("keydown", function (e) {
   }
 });
 
-// Update the visual selection of suggestions
-function updateSelection(items) {
-  for (let i = 0; i < items.length; i++) {
-    items[i].classList.toggle("selected", i === selectedIndex);
+// Global event listener for closing modal with Escape key
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" && modal.style.display === "block") {
+    modal.style.display = "none";
   }
-}
+});
 
 // Validate and continue function
 function validateAndContinue() {
@@ -336,6 +336,7 @@ function validateAndContinue() {
     }
 
     modal.style.display = "block"; // Show the modal with the suggested domain
+    return; // Exit the function to prevent further execution
   } else if (!validateEmail(email)) {
     showError();
   } else if (!domains.includes(domain.toLowerCase())) {
@@ -349,6 +350,13 @@ function validateAndContinue() {
     // Valid email with a domain in our list
     console.log("Continuing with:", email);
     showToast("Continuing with valid email: " + email);
+  }
+}
+
+// Update the visual selection of suggestions
+function updateSelection(items) {
+  for (let i = 0; i < items.length; i++) {
+    items[i].classList.toggle("selected", i === selectedIndex);
   }
 }
 
