@@ -181,7 +181,7 @@ emailInput.addEventListener("input", function () {
           const completionPart = domain.slice(domainPart.length);
           return `<div class="suggestion">
                                 <span class="suggestion-input">${username}@${commonPart}</span>
-                                <span class="suggestion-completion">${completionPart}</span>
+                                <span class="suggestion-completion"><strong>${completionPart}</strong></span>
                             </div>`;
         })
         .join("");
@@ -192,11 +192,8 @@ emailInput.addEventListener("input", function () {
       // Show the last matching domains if no new matches are found
       suggestions.innerHTML = lastMatchingDomains
         .map((domain) => {
-          const commonPart = domain.slice(0, domainPart.length);
-          const completionPart = domain.slice(domainPart.length);
           return `<div class="suggestion">
-                                <span class="suggestion-input">${username}@${commonPart}</span>
-                                <span class="suggestion-completion">${completionPart}</span>
+                                <span class="suggestion-input">${username}@${domain}</span>
                             </div>`;
         })
         .join("");
