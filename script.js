@@ -14,22 +14,66 @@ const inputContainer = document.querySelector(".input-container");
 // Constants
 const domains = ["gmail.com", "web.de", "gmx.de", "icloud.com", "gmx.com"];
 const validTLDs = [
-  "com", "org", "net", "edu", "gov", "mil", "io", "co", "us", "uk", "de", "fr", "jp", "au", "ru", "in", "ca", "it", "es", "nl", "br", "se", "no", "fi", "dk", "ch", "at", "be", "nz", "ie", "sg", "hk", "tw", "kr", "pl", "hu", "cz", "gr", "pt", "il", "za", "mx", "ar", "cl", "co", "pe", "ve", "ua", "th", "vn", "id"
+  "com",
+  "org",
+  "net",
+  "edu",
+  "gov",
+  "mil",
+  "io",
+  "co",
+  "us",
+  "uk",
+  "de",
+  "fr",
+  "jp",
+  "au",
+  "ru",
+  "in",
+  "ca",
+  "it",
+  "es",
+  "nl",
+  "br",
+  "se",
+  "no",
+  "fi",
+  "dk",
+  "ch",
+  "at",
+  "be",
+  "nz",
+  "ie",
+  "sg",
+  "hk",
+  "tw",
+  "kr",
+  "pl",
+  "hu",
+  "cz",
+  "gr",
+  "pt",
+  "il",
+  "za",
+  "mx",
+  "ar",
+  "cl",
+  "co",
+  "pe",
+  "ve",
+  "ua",
+  "th",
+  "vn",
+  "id",
 ];
 let selectedIndex = -1;
 let lastMatchingDomains = [];
 
 // Email validation function
 function validateEmail(email) {
-  const parts = email.split("@");
-  if (parts.length !== 2) return false;
-
-  const [, domain] = parts;
-  const domainParts = domain.split(".");
-  if (domainParts.length < 2) return false;
-
-  const tld = domainParts[domainParts.length - 1].toLowerCase();
-  return validTLDs.includes(tld);
+  // This regex allows for more flexible TLD validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
 
 // Find the closest matching domain
@@ -43,7 +87,8 @@ function findClosestDomain(inputDomain) {
       domain.toLowerCase()
     );
 
-    if (distance < minDistance && distance <= 2) { // Changed from 1 to 2
+    if (distance < minDistance && distance <= 2) {
+      // Changed from 1 to 2
       minDistance = distance;
       closestDomain = domain;
     }
@@ -177,9 +222,14 @@ document.addEventListener("click", function (event) {
 suggestions.addEventListener("click", function (e) {
   const suggestionElement = e.target.closest(".suggestion");
   if (suggestionElement) {
-    const inputPart = suggestionElement.querySelector(".suggestion-input").textContent;
-    const completionPartElement = suggestionElement.querySelector(".suggestion-completion");
-    const completionPart = completionPartElement ? completionPartElement.textContent : '';
+    const inputPart =
+      suggestionElement.querySelector(".suggestion-input").textContent;
+    const completionPartElement = suggestionElement.querySelector(
+      ".suggestion-completion"
+    );
+    const completionPart = completionPartElement
+      ? completionPartElement.textContent
+      : "";
     emailInput.value = inputPart + completionPart;
     suggestions.style.display = "none";
     emailInput.classList.remove("suggestions-visible");
@@ -194,9 +244,14 @@ emailInput.addEventListener("keydown", function (e) {
     e.preventDefault();
     if (selectedIndex !== -1 && suggestionItems.length > 0) {
       const selectedSuggestion = suggestionItems[selectedIndex];
-      const inputPart = selectedSuggestion.querySelector(".suggestion-input").textContent;
-      const completionPartElement = selectedSuggestion.querySelector(".suggestion-completion");
-      const completionPart = completionPartElement ? completionPartElement.textContent : '';
+      const inputPart =
+        selectedSuggestion.querySelector(".suggestion-input").textContent;
+      const completionPartElement = selectedSuggestion.querySelector(
+        ".suggestion-completion"
+      );
+      const completionPart = completionPartElement
+        ? completionPartElement.textContent
+        : "";
       emailInput.value = inputPart + completionPart;
       suggestions.style.display = "none";
       emailInput.classList.remove("suggestions-visible");
@@ -212,7 +267,8 @@ emailInput.addEventListener("keydown", function (e) {
       updateSelection(suggestionItems);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      selectedIndex = (selectedIndex - 1 + suggestionItems.length) % suggestionItems.length;
+      selectedIndex =
+        (selectedIndex - 1 + suggestionItems.length) % suggestionItems.length;
       updateSelection(suggestionItems);
     }
   }
@@ -236,14 +292,17 @@ function validateAndContinue() {
   }
 
   const closestDomain = findClosestDomain(domain);
-  if (closestDomain && closestDomain !== domain.toLowerCase()) {
-    // Update the modal title to include the suggested domain
+  if (
+    closestDomain &&
+    closestDomain !== domain.toLowerCase() &&
+    domains.includes(closestDomain)
+  ) {
+    // Only suggest correction if the closest domain is in our predefined list
     const modalTitle = document.querySelector("#modal .modal-content h2");
     if (modalTitle) {
       modalTitle.textContent = `Did you mean "${closestDomain}"?`;
     }
 
-    // Update the modal content to include the typed email with the domain part in bold
     const typedEmailElement = document.getElementById("typedEmail");
     if (typedEmailElement) {
       typedEmailElement.innerHTML = `${username}@<strong>${domain}</strong>`;
@@ -253,11 +312,11 @@ function validateAndContinue() {
   } else if (!validateEmail(email)) {
     showError();
   } else if (!domains.includes(domain.toLowerCase())) {
-    showToast(
-      `${domain} might be a valid domain but not 100% certain`,
-      "orange"
-    );
+    // Valid email with a domain not in our list
+    console.log("Continuing with:", email);
+    showToast("Continuing with valid email: " + email);
   } else {
+    // Valid email with a domain in our list
     console.log("Continuing with:", email);
     showToast("Continuing with valid email: " + email);
   }
@@ -282,7 +341,9 @@ function hideError() {
 correctEmailBtn.addEventListener("click", function () {
   const email = emailInput.value;
   const [username, domain] = email.split("@");
-  const suggestedDomain = document.querySelector("#modal .modal-content h2").textContent.match(/"([^"]+)"/)[1]; // Extract the suggested domain
+  const suggestedDomain = document
+    .querySelector("#modal .modal-content h2")
+    .textContent.match(/"([^"]+)"/)[1]; // Extract the suggested domain
   const updatedEmail = `${username}@${suggestedDomain}`;
   emailInput.value = updatedEmail;
   modal.style.display = "none";
