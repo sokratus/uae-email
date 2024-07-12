@@ -14,59 +14,10 @@ const inputContainer = document.querySelector(".input-container");
 // Constants
 const domains = ["gmail.com", "web.de", "gmx.de", "icloud.com", "gmx.com"];
 const validTLDs = [
-  "com",
-  "org",
-  "net",
-  "edu",
-  "gov",
-  "mil",
-  "io",
-  "co",
-  "us",
-  "uk",
-  "de",
-  "fr",
-  "jp",
-  "au",
-  "ru",
-  "in",
-  "ca",
-  "it",
-  "es",
-  "nl",
-  "br",
-  "se",
-  "no",
-  "fi",
-  "dk",
-  "ch",
-  "at",
-  "be",
-  "nz",
-  "ie",
-  "sg",
-  "hk",
-  "tw",
-  "kr",
-  "pl",
-  "hu",
-  "cz",
-  "gr",
-  "pt",
-  "il",
-  "za",
-  "mx",
-  "ar",
-  "cl",
-  "co",
-  "pe",
-  "ve",
-  "ua",
-  "th",
-  "vn",
-  "id",
+  "com", "org", "net", "edu", "gov", "mil", "io", "co", "us", "uk", "de", "fr", "jp", "au", "ru", "in", "ca", "it", "es", "nl", "br", "se", "no", "fi", "dk", "ch", "at", "be", "nz", "ie", "sg", "hk", "tw", "kr", "pl", "hu", "cz", "gr", "pt", "il", "za", "mx", "ar", "cl", "co", "pe", "ve", "ua", "th", "vn", "id"
 ];
 let selectedIndex = -1;
+let lastMatchingDomains = [];
 
 // Email validation function
 function validateEmail(email) {
@@ -81,12 +32,8 @@ function validateEmail(email) {
   return validTLDs.includes(tld);
 }
 
-// Original findClosestDomain function
+// Find the closest matching domain
 function findClosestDomain(inputDomain) {
-  if (domains.includes(inputDomain.toLowerCase())) {
-    return inputDomain.toLowerCase(); // Return the input domain if it's already in the list
-  }
-
   let closestDomain = null;
   let minDistance = Infinity;
 
@@ -96,13 +43,13 @@ function findClosestDomain(inputDomain) {
       domain.toLowerCase()
     );
 
-    if (distance < minDistance && distance <= 1) {
+    if (distance < minDistance && distance <= 2) { // Changed from 1 to 2
       minDistance = distance;
       closestDomain = domain;
     }
   }
 
-  return closestDomain && minDistance <= 1 ? closestDomain : null;
+  return closestDomain;
 }
 
 // Calculate Levenshtein distance between two strings
@@ -158,8 +105,6 @@ function showToast(message, backgroundColor = "green") {
 }
 
 // Event listener for email input
-let lastMatchingDomains = [];
-
 emailInput.addEventListener("input", function () {
   const inputValue = this.value;
 
@@ -189,21 +134,32 @@ emailInput.addEventListener("input", function () {
         suggestions.style.display = "block";
         emailInput.classList.add("suggestions-visible");
         selectedIndex = -1;
+      } else if (lastMatchingDomains.length > 0 && domainPart.length > 1) {
+        // Show the last matching domains without formatting if no new matches are found
+        suggestions.innerHTML = lastMatchingDomains
+          .map((domain) => {
+            return `<div class="suggestion">
+                      <span class="suggestion-input">${username}@${domain}</span>
+                    </div>`;
+          })
+          .join("");
+        suggestions.style.display = "block";
+        emailInput.classList.add("suggestions-visible");
       } else {
         suggestions.style.display = "none";
         emailInput.classList.remove("suggestions-visible");
+        lastMatchingDomains = []; // Clear the last matching domains
       }
     } else {
       suggestions.style.display = "none";
       emailInput.classList.remove("suggestions-visible");
+      lastMatchingDomains = []; // Clear the last matching domains
     }
   } else {
     suggestions.style.display = "none";
     emailInput.classList.remove("suggestions-visible");
+    lastMatchingDomains = []; // Clear the last matching domains
   }
-
-  // Debugging: Log the class list to ensure the class is being toggled
-  console.log(emailInput.classList);
 });
 
 // Event listener to hide suggestions when clicking outside
@@ -226,6 +182,7 @@ suggestions.addEventListener("click", function (e) {
     const completionPart = completionPartElement ? completionPartElement.textContent : '';
     emailInput.value = inputPart + completionPart;
     suggestions.style.display = "none";
+    emailInput.classList.remove("suggestions-visible");
   }
 });
 
@@ -242,19 +199,22 @@ emailInput.addEventListener("keydown", function (e) {
       const completionPart = completionPartElement ? completionPartElement.textContent : '';
       emailInput.value = inputPart + completionPart;
       suggestions.style.display = "none";
+      emailInput.classList.remove("suggestions-visible");
     }
     validateAndContinue();
     return;
   }
 
-  if (e.key === "ArrowDown") {
-    e.preventDefault();
-    selectedIndex = (selectedIndex + 1) % suggestionItems.length;
-    updateSelection(suggestionItems);
-  } else if (e.key === "ArrowUp") {
-    e.preventDefault();
-    selectedIndex = (selectedIndex - 1 + suggestionItems.length) % suggestionItems.length;
-    updateSelection(suggestionItems);
+  if (suggestionItems.length > 0) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % suggestionItems.length;
+      updateSelection(suggestionItems);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + suggestionItems.length) % suggestionItems.length;
+      updateSelection(suggestionItems);
+    }
   }
 });
 
@@ -265,7 +225,7 @@ function updateSelection(items) {
   }
 }
 
-// Updated validateAndContinue function
+// Validate and continue function
 function validateAndContinue() {
   const email = emailInput.value;
   const [username, domain] = email.split("@");
@@ -276,7 +236,7 @@ function validateAndContinue() {
   }
 
   const closestDomain = findClosestDomain(domain);
-  if (closestDomain && closestDomain !== domain) {
+  if (closestDomain && closestDomain !== domain.toLowerCase()) {
     // Update the modal title to include the suggested domain
     const modalTitle = document.querySelector("#modal .modal-content h2");
     if (modalTitle) {
@@ -286,8 +246,7 @@ function validateAndContinue() {
     // Update the modal content to include the typed email with the domain part in bold
     const typedEmailElement = document.getElementById("typedEmail");
     if (typedEmailElement) {
-      const [typedUsername, typedDomain] = email.split("@");
-      typedEmailElement.innerHTML = `${typedUsername}@<strong>${typedDomain}</strong>`;
+      typedEmailElement.innerHTML = `${username}@<strong>${domain}</strong>`;
     }
 
     modal.style.display = "block"; // Show the modal with the suggested domain
@@ -328,7 +287,7 @@ correctEmailBtn.addEventListener("click", function () {
   emailInput.value = updatedEmail;
   modal.style.display = "none";
   hideError();
-  showToast(`Continuing with valid SLD: ${suggestedDomain}`); // Updated line
+  showToast(`Continuing with valid SLD: ${suggestedDomain}`);
 });
 
 // Event listener for keeping original email in modal
