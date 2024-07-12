@@ -271,6 +271,12 @@ emailInput.addEventListener("keydown", function (e) {
     return;
   }
 
+  if (e.key === "Escape") {
+    suggestions.style.display = "none";
+    emailInput.classList.remove("suggestions-visible");
+    return;
+  }
+
   if (suggestionItems.length > 0) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
