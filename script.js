@@ -12,7 +12,19 @@ const errorMessage = document.getElementById("errorMessage");
 const inputContainer = document.querySelector(".input-container");
 
 // Constants
-const domains = ["gmail.com", "web.de", "gmx.de", "icloud.com", "gmx.com"];
+const domains = [
+  "gmail.com",
+  "web.de",
+  "gmx.de",
+  "icloud.com",
+  "gmx.com",
+  "gmx.net",
+  "outlook.com",
+  "outlook.de",
+  "yahoo.com",
+  "hotmail.co.uk",
+  "googlemail.com",
+];
 const validTLDs = [
   "com",
   "org",
