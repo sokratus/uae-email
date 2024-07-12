@@ -227,11 +227,9 @@ document.addEventListener("click", function (event) {
 suggestions.addEventListener("click", function (e) {
   const suggestionElement = e.target.closest(".suggestion");
   if (suggestionElement) {
-    const inputPart =
-      suggestionElement.querySelector(".suggestion-input").textContent;
-    const completionPart = suggestionElement.querySelector(
-      ".suggestion-completion"
-    ).textContent;
+    const inputPart = suggestionElement.querySelector(".suggestion-input").textContent;
+    const completionPartElement = suggestionElement.querySelector(".suggestion-completion");
+    const completionPart = completionPartElement ? completionPartElement.textContent : '';
     emailInput.value = inputPart + completionPart;
     suggestions.style.display = "none";
   }
@@ -245,11 +243,9 @@ emailInput.addEventListener("keydown", function (e) {
     e.preventDefault();
     if (selectedIndex !== -1 && suggestionItems.length > 0) {
       const selectedSuggestion = suggestionItems[selectedIndex];
-      const inputPart =
-        selectedSuggestion.querySelector(".suggestion-input").textContent;
-      const completionPart = selectedSuggestion.querySelector(
-        ".suggestion-completion"
-      ).textContent;
+      const inputPart = selectedSuggestion.querySelector(".suggestion-input").textContent;
+      const completionPartElement = selectedSuggestion.querySelector(".suggestion-completion");
+      const completionPart = completionPartElement ? completionPartElement.textContent : '';
       emailInput.value = inputPart + completionPart;
       suggestions.style.display = "none";
     }
@@ -263,11 +259,17 @@ emailInput.addEventListener("keydown", function (e) {
     updateSelection(suggestionItems);
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    selectedIndex =
-      (selectedIndex - 1 + suggestionItems.length) % suggestionItems.length;
+    selectedIndex = (selectedIndex - 1 + suggestionItems.length) % suggestionItems.length;
     updateSelection(suggestionItems);
   }
 });
+
+// Update the visual selection of suggestions
+function updateSelection(items) {
+  for (let i = 0; i < items.length; i++) {
+    items[i].classList.toggle("selected", i === selectedIndex);
+  }
+}
 
 // Updated validateAndContinue function
 function validateAndContinue() {
@@ -305,13 +307,6 @@ function validateAndContinue() {
   } else {
     console.log("Continuing with:", email);
     showToast("Continuing with valid email: " + email);
-  }
-}
-
-// Update the visual selection of suggestions
-function updateSelection(items) {
-  for (let i = 0; i < items.length; i++) {
-    items[i].classList.toggle("selected", i === selectedIndex);
   }
 }
 
