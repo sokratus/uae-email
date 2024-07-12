@@ -71,7 +71,6 @@ let lastMatchingDomains = [];
 
 // Email validation function
 function validateEmail(email) {
-  // This regex allows for more flexible TLD validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
@@ -291,6 +290,14 @@ function validateAndContinue() {
     return;
   }
 
+  const domainParts = domain.split(".");
+  const tld = domainParts[domainParts.length - 1];
+
+  if (!validTLDs.includes(tld.toLowerCase())) {
+    showError();
+    return;
+  }
+
   const closestDomain = findClosestDomain(domain);
   if (
     closestDomain &&
@@ -329,6 +336,8 @@ continueButton.addEventListener("click", validateAndContinue);
 function showError() {
   errorMessage.style.display = "flex";
   inputContainer.classList.add("error");
+  suggestions.style.display = "none"; // Hide suggestions when error is shown
+  emailInput.classList.remove("suggestions-visible");
 }
 
 // Hide error message
