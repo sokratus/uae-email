@@ -271,12 +271,6 @@ emailInput.addEventListener("keydown", function (e) {
     return;
   }
 
-  if (e.key === "Escape") {
-    suggestions.style.display = "none";
-    emailInput.classList.remove("suggestions-visible");
-    return;
-  }
-
   if (suggestionItems.length > 0) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -339,7 +333,10 @@ function validateAndContinue() {
   } else if (!domains.includes(domain.toLowerCase())) {
     // Valid email with a domain not in our list
     console.log("Continuing with:", email);
-    showToast("Continuing with valid email: " + email);
+    showToast(
+      `${domain} might be a valid domain but not 100% certain`,
+      "orange"
+    );
   } else {
     // Valid email with a domain in our list
     console.log("Continuing with:", email);
