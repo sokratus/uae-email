@@ -179,10 +179,11 @@ input[type="email"]:focus-visible {
 
 .modal-content {
   background-color: #fefefe;
-  padding: 20px;
+  padding: 24px;
+  padding-bottom: 36px;
   border: 1px solid #888;
   width: 80%;
-  max-width: 400px;
+  max-width: 420px;
   border-radius: 0;
   margin: auto; /* Center the modal on desktop */
   position: relative; /* Ensure it stays in the center */
@@ -220,6 +221,7 @@ input[type="email"]:focus-visible {
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  right: 8px;
 }
 .close:hover,
 .close:focus {
@@ -355,4 +357,23 @@ input[type="email"]:focus-visible {
 #emailInput.suggestions-visible {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.grey-container {
+  background-color: #f0f0f0;
+  padding: 10px;
+  /* border-radius: 4px; */
+  display: inline-block;
+  margin-top: 10px;
+  display: block;
+}
+
+.email-group {
+  /* margin: 20px 0; */
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.email-group p {
+  margin-bottom: 0px;
 }

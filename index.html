@@ -74,9 +74,13 @@
     <div id="modal" class="modal">
       <div class="modal-content">
         <img src="assets/icon-cross.svg" alt="Close" class="close" />
-        <h2>Did you mean "<span id="suggestedDomain"></span>"?</h2>
-        <button id="correctEmail">Yes, correct my email</button>
-        <button id="keepOriginal">No, don't correct</button>
+        <h2>Did you mean:</h2>
+        <div class="email-group">
+          <p>Email address you typed:</p>
+          <div id="typedEmail" class="grey-container"></div>
+        </div>
+        <button id="correctEmail">Correct my email</button>
+        <button id="keepOriginal">Keep original</button>
       </div>
     </div>
 

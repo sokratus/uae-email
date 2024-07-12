@@ -5,7 +5,6 @@ const emailInput = document.getElementById("emailInput");
 const suggestions = document.getElementById("suggestions");
 const continueButton = document.getElementById("continueButton");
 const modal = document.getElementById("modal");
-const suggestedDomain = document.getElementById("suggestedDomain");
 const correctEmailBtn = document.getElementById("correctEmail");
 const keepOriginalBtn = document.getElementById("keepOriginal");
 const closeBtn = document.querySelector(".close");
@@ -92,7 +91,10 @@ function findClosestDomain(inputDomain) {
   let minDistance = Infinity;
 
   for (const domain of domains) {
-    const distance = levenshteinDistance(inputDomain.toLowerCase(), domain.toLowerCase());
+    const distance = levenshteinDistance(
+      inputDomain.toLowerCase(),
+      domain.toLowerCase()
+    );
 
     if (distance < minDistance && distance <= 1) {
       minDistance = distance;
@@ -253,7 +255,7 @@ emailInput.addEventListener("keydown", function (e) {
   }
 });
 
-// Original validateAndContinue function
+// Updated validateAndContinue function
 function validateAndContinue() {
   const email = emailInput.value;
   const [username, domain] = email.split("@");
@@ -265,12 +267,27 @@ function validateAndContinue() {
 
   const closestDomain = findClosestDomain(domain);
   if (closestDomain && closestDomain !== domain) {
-    suggestedDomain.textContent = closestDomain;
+    // Update the modal title to include the suggested domain
+    const modalTitle = document.querySelector("#modal .modal-content h2");
+    if (modalTitle) {
+      modalTitle.textContent = `Did you mean "${closestDomain}"?`;
+    }
+
+    // Update the modal content to include the typed email with the domain part in bold
+    const typedEmailElement = document.getElementById("typedEmail");
+    if (typedEmailElement) {
+      const [typedUsername, typedDomain] = email.split("@");
+      typedEmailElement.innerHTML = `${typedUsername}@<strong>${typedDomain}</strong>`;
+    }
+
     modal.style.display = "block"; // Show the modal with the suggested domain
   } else if (!validateEmail(email)) {
     showError();
   } else if (!domains.includes(domain.toLowerCase())) {
-    showToast(`${domain} might be a valid domain but not 100% certain`, "orange");
+    showToast(
+      `${domain} might be a valid domain but not 100% certain`,
+      "orange"
+    );
   } else {
     console.log("Continuing with:", email);
     showToast("Continuing with valid email: " + email);
@@ -303,11 +320,12 @@ function hideError() {
 correctEmailBtn.addEventListener("click", function () {
   const email = emailInput.value;
   const [username, domain] = email.split("@");
-  const updatedEmail = `${username}@${suggestedDomain.textContent}`;
+  const suggestedDomain = document.querySelector("#modal .modal-content h2").textContent.match(/"([^"]+)"/)[1]; // Extract the suggested domain
+  const updatedEmail = `${username}@${suggestedDomain}`;
   emailInput.value = updatedEmail;
   modal.style.display = "none";
   hideError();
-  showToast(`Continuing with valid SLD: ${suggestedDomain.textContent}`); // Updated line
+  showToast(`Continuing with valid SLD: ${suggestedDomain}`); // Updated line
 });
 
 // Event listener for keeping original email in modal
@@ -319,7 +337,10 @@ keepOriginalBtn.addEventListener("click", function () {
   } else {
     hideError();
     const typedDomain = originalEmail.split("@")[1];
-    showToast(`${typedDomain} might be a valid domain but not 100% certain`, "orange");
+    showToast(
+      `${typedDomain} might be a valid domain but not 100% certain`,
+      "orange"
+    );
   }
 });
 
