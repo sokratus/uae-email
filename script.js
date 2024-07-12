@@ -158,6 +158,8 @@ function showToast(message, backgroundColor = "green") {
 }
 
 // Event listener for email input
+let lastMatchingDomains = [];
+
 emailInput.addEventListener("input", function () {
   const inputValue = this.value;
 
@@ -172,6 +174,7 @@ emailInput.addEventListener("input", function () {
     );
 
     if (matchingDomains.length > 0) {
+      lastMatchingDomains = matchingDomains; // Store the last matching domains
       suggestions.innerHTML = matchingDomains
         .map((domain) => {
           const commonPart = domain.slice(0, domainPart.length);
@@ -183,15 +186,29 @@ emailInput.addEventListener("input", function () {
         })
         .join("");
       suggestions.style.display = "block";
-      emailInput.classList.add("suggestions-visible"); // Add this line
+      emailInput.classList.add("suggestions-visible");
       selectedIndex = -1;
+    } else if (lastMatchingDomains.length > 0) {
+      // Show the last matching domains if no new matches are found
+      suggestions.innerHTML = lastMatchingDomains
+        .map((domain) => {
+          const commonPart = domain.slice(0, domainPart.length);
+          const completionPart = domain.slice(domainPart.length);
+          return `<div class="suggestion">
+                                <span class="suggestion-input">${username}@${commonPart}</span>
+                                <span class="suggestion-completion">${completionPart}</span>
+                            </div>`;
+        })
+        .join("");
+      suggestions.style.display = "block";
+      emailInput.classList.add("suggestions-visible");
     } else {
       suggestions.style.display = "none";
-      emailInput.classList.remove("suggestions-visible"); // Add this line
+      emailInput.classList.remove("suggestions-visible");
     }
   } else {
     suggestions.style.display = "none";
-    emailInput.classList.remove("suggestions-visible"); // Add this line
+    emailInput.classList.remove("suggestions-visible");
   }
 
   // Debugging: Log the class list to ensure the class is being toggled
