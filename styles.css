@@ -1,27 +1,56 @@
 /* styles.css */
 body {
-  font-family: Arial, sans-serif;
+  font-family: HelveticaNow, Helvetica, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 .container {
-  width: 300px;
+  width: 420px;
   background-color: white;
-  padding: 20px;
+  padding: 64px 24px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    padding: 96px 24px 24px 24px; /* Ensure top padding is applied */
+  }
+}
+.zalando-logo {
+  width: 48px;
+  height: 48px;
+}
+.titles {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 h1 {
-  font-size: 20px;
-  margin-bottom: 20px;
+  font-size: 26px;
+  margin: 0;
+  font-family: Tiempos, "Times New Roman";
+  font-weight: 400;
+}
+.subtitle {
+  font-family: HelveticaNow, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  /* margin-bottom: 20px; */
 }
 .input-container {
   position: relative;
   margin-bottom: 20px;
+  border-radius: 4px;
+}
+.input-container.suggestions-visible {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 .input-container label {
   font-size: 12px;
@@ -43,7 +72,7 @@ input[type="email"]:focus,
 input[type="email"]:focus-visible {
   border-color: #000;
   border-width: 2px;
-  outline: none; 
+  outline: none;
 }
 
 .suggestions {
@@ -78,7 +107,7 @@ input[type="email"]:focus-visible {
   background-color: #000;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 100px;
   font-size: 16px;
   cursor: pointer;
   height: 48px;
@@ -92,17 +121,99 @@ input[type="email"]:focus-visible {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(26, 26, 26, 0);
+  animation: fadeInBackground 0.3s ease-out forwards;
 }
+
+@keyframes fadeInBackground {
+  from {
+    background-color: rgba(26, 26, 26, 0);
+  }
+  to {
+    background-color: rgba(26, 26, 26, 0.5);
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    margin: 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpCenter {
+  from {
+    transform: translateY(-45%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+}
+
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
   max-width: 400px;
-  border-radius: 8px;
+  border-radius: 0;
+  margin: auto; /* Center the modal on desktop */
+  position: relative; /* Ensure it stays in the center */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Center vertically */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  animation: slideUpCenter 0.3s ease-out; /* Add slide up animation */
 }
+.modal-content h2 {
+  margin-top: 28px;
+  font-size: 24px;
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    margin: 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto; /* Override top positioning */
+    transform: translateY(0); /* Reset transform for mobile */
+    animation: slideUp 0.3s ease-out;
+    padding: 20px; /* Ensure padding is applied */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+  }
+}
+
 .close {
   color: #aaa;
   float: right;
@@ -125,15 +236,19 @@ input[type="email"]:focus-visible {
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  height: 48px;
+  border-radius: 100px;
+  font-weight: 600;
 }
 #correctEmail {
   background-color: #000;
   color: #fff;
+  border: 2px solid #000;
 }
 #keepOriginal {
   background-color: #fff;
   color: #000;
-  border: 1px solid #000;
+  border: 2px solid #000;
 }
 .error-message {
   color: #d32f2f;
@@ -143,7 +258,8 @@ input[type="email"]:focus-visible {
   align-items: center;
 }
 .error-icon {
-  margin-right: 5px;
+  margin-right: 4px;
+  /* margin-top: 2px; */
   font-size: 18px;
 }
 .input-container.error input {
@@ -174,4 +290,69 @@ input[type="email"]:focus-visible {
   visibility: visible;
   opacity: 1;
   transform: translateX(-50%) translateY(0); /* Slide down into view */
+}
+
+.terms {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  color: #000;
+  line-height: 16px;
+}
+
+.terms a {
+  color: #6328e0;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.social-login {
+  margin-top: 20px;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid #000;
+  border-radius: 100px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #000;
+  background-color: #fff;
+  font-weight: 600;
+  font-family: HelveticaNow, Helvetica, sans-serif;
+  height: 48px; /* Ensure consistent height */
+  line-height: 1; /* Ensure text is vertically centered */
+}
+
+.social-icon {
+  margin-right: 8px;
+  height: 24px; /* Ensure icon is vertically centered */
+}
+
+.legal-links {
+  margin-top: 48px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.legal-links a {
+  color: #6328e0;
+  font-weight: 400;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+#emailInput {
+  border-radius: 4px;
+  /* other styles */
+}
+
+#emailInput.suggestions-visible {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }

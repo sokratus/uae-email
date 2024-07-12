@@ -13,27 +13,67 @@
         alt="Zalando Logo"
         class="zalando-logo"
       />
-
-      <h1>Sign in or register</h1>
+      <section class="titles">
+        <h1>Sign in or register</h1>
+        <span class="subtitle">In a snap</span>
+      </section>
       <div class="input-container">
         <label for="emailInput">Email address</label>
-        <input
-          type="email"
-          id="emailInput"
-          autocomplete="off"
-        />
+        <input type="email" id="emailInput" autocomplete="off" />
+        <div id="errorMessage" class="error-message" style="display: none">
+          <img
+            src="assets/icon-cross-filled.svg"
+            alt="Error"
+            class="error-icon"
+          />
+          Please enter a valid email address
+        </div>
         <div class="suggestions" id="suggestions"></div>
       </div>
-      <div id="errorMessage" class="error-message" style="display: none">
-        <span class="error-icon">&#x2718;</span> Please enter a valid email
-        address
-      </div>
+
       <button id="continueButton">Continue</button>
+
+      <!-- New elements added below -->
+      <p class="terms">
+        When you create an account, you agree to our
+        <a href="#">Terms of Use</a>. Please read our
+        <a href="#">Privacy Notice</a> and <a href="#">Legal notice</a>.
+      </p>
+      <div class="social-login">
+        <button class="social-button google">
+          <img
+            src="assets/social-google.svg"
+            alt="Google Icon"
+            class="social-icon"
+          />
+          Continue with Google
+        </button>
+        <button class="social-button apple">
+          <img
+            src="assets/social-apple.svg"
+            alt="Apple Icon"
+            class="social-icon"
+          />
+          Continue with Apple
+        </button>
+        <button class="social-button facebook">
+          <img
+            src="assets/social-fb.svg"
+            alt="Facebook Icon"
+            class="social-icon"
+          />
+          Continue with Facebook
+        </button>
+      </div>
+      <div class="legal-links">
+        <a href="#">Legal notice</a>
+        <a href="#">Privacy notice</a>
+      </div>
     </div>
 
     <div id="modal" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
+        <img src="assets/icon-cross.svg" alt="Close" class="close" />
         <h2>Did you mean "<span id="suggestedDomain"></span>"?</h2>
         <button id="correctEmail">Yes, correct my email</button>
         <button id="keepOriginal">No, don't correct</button>

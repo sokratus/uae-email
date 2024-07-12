@@ -82,7 +82,7 @@ function validateEmail(email) {
   return validTLDs.includes(tld);
 }
 
-// Find the closest matching domain
+// Original findClosestDomain function
 function findClosestDomain(inputDomain) {
   if (domains.includes(inputDomain.toLowerCase())) {
     return inputDomain.toLowerCase(); // Return the input domain if it's already in the list
@@ -91,27 +91,15 @@ function findClosestDomain(inputDomain) {
   let closestDomain = null;
   let minDistance = Infinity;
 
-  // Split the input domain into SLD and TLD
-  const [inputSLD, inputTLD] = inputDomain.split(".");
-
   for (const domain of domains) {
-    // Split each known domain into SLD and TLD
-    const [knownSLD, knownTLD] = domain.split(".");
+    const distance = levenshteinDistance(inputDomain.toLowerCase(), domain.toLowerCase());
 
-    // Calculate distance based on SLD only
-    const distance = levenshteinDistance(
-      inputSLD.toLowerCase(),
-      knownSLD.toLowerCase()
-    );
-
-    // We're being more strict here. Only suggest if it's very close to a known domain.
     if (distance < minDistance && distance <= 1) {
       minDistance = distance;
       closestDomain = domain;
     }
   }
 
-  // Only return a suggestion if it's very close to a known domain
   return closestDomain && minDistance <= 1 ? closestDomain : null;
 }
 
@@ -193,12 +181,29 @@ emailInput.addEventListener("input", function () {
         })
         .join("");
       suggestions.style.display = "block";
+      emailInput.classList.add("suggestions-visible"); // Add this line
       selectedIndex = -1;
     } else {
       suggestions.style.display = "none";
+      emailInput.classList.remove("suggestions-visible"); // Add this line
     }
   } else {
     suggestions.style.display = "none";
+    emailInput.classList.remove("suggestions-visible"); // Add this line
+  }
+
+  // Debugging: Log the class list to ensure the class is being toggled
+  console.log(emailInput.classList);
+});
+
+// Event listener to hide suggestions when clicking outside
+document.addEventListener("click", function (event) {
+  if (
+    !inputContainer.contains(event.target) &&
+    !suggestions.contains(event.target)
+  ) {
+    suggestions.style.display = "none";
+    emailInput.classList.remove("suggestions-visible");
   }
 });
 
@@ -248,7 +253,7 @@ emailInput.addEventListener("keydown", function (e) {
   }
 });
 
-// Function to validate email and continue
+// Original validateAndContinue function
 function validateAndContinue() {
   const email = emailInput.value;
   const [username, domain] = email.split("@");
@@ -261,7 +266,7 @@ function validateAndContinue() {
   const closestDomain = findClosestDomain(domain);
   if (closestDomain && closestDomain !== domain) {
     suggestedDomain.textContent = closestDomain;
-    modal.style.display = "block";
+    modal.style.display = "block"; // Show the modal with the suggested domain
   } else if (!validateEmail(email)) {
     showError();
   } else if (!domains.includes(domain.toLowerCase())) {
@@ -284,7 +289,7 @@ continueButton.addEventListener("click", validateAndContinue);
 
 // Show error message
 function showError() {
-  errorMessage.style.display = "block";
+  errorMessage.style.display = "flex";
   inputContainer.classList.add("error");
 }
 
@@ -314,7 +319,7 @@ keepOriginalBtn.addEventListener("click", function () {
   } else {
     hideError();
     const typedDomain = originalEmail.split("@")[1];
-    showToast(`Continuing with invalid SLD: ${typedDomain}`, "orange");
+    showToast(`${typedDomain} might be a valid domain but not 100% certain`, "orange");
   }
 });
 
