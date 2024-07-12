@@ -2,6 +2,7 @@
 
 // DOM element selection
 const emailInput = document.getElementById("emailInput");
+emailInput.setAttribute("autocomplete", "off"); // Disable password manager support
 const suggestions = document.getElementById("suggestions");
 const continueButton = document.getElementById("continueButton");
 const modal = document.getElementById("modal");
@@ -171,6 +172,7 @@ emailInput.addEventListener("input", function () {
   if (inputValue.includes("@")) {
     const [username, domainPart] = inputValue.split("@");
     if (domainPart.length > 0) {
+      // Ensure at least one character is typed
       const matchingDomains = domains.filter((domain) =>
         domain.startsWith(domainPart.toLowerCase())
       );
@@ -190,7 +192,7 @@ emailInput.addEventListener("input", function () {
         suggestions.style.display = "block";
         emailInput.classList.add("suggestions-visible");
         selectedIndex = -1;
-      } else if (lastMatchingDomains.length > 0 && domainPart.length > 1) {
+      } else if (lastMatchingDomains.length > 0) {
         // Show the last matching domains without formatting if no new matches are found
         suggestions.innerHTML = lastMatchingDomains
           .map((domain) => {
@@ -268,6 +270,12 @@ emailInput.addEventListener("keydown", function (e) {
       emailInput.classList.remove("suggestions-visible");
     }
     validateAndContinue();
+    return;
+  }
+
+  if (e.key === "Escape") {
+    suggestions.style.display = "none";
+    emailInput.classList.remove("suggestions-visible");
     return;
   }
 
