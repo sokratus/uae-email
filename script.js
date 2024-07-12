@@ -169,36 +169,30 @@ emailInput.addEventListener("input", function () {
 
   if (inputValue.includes("@")) {
     const [username, domainPart] = inputValue.split("@");
-    const matchingDomains = domains.filter((domain) =>
-      domain.startsWith(domainPart.toLowerCase())
-    );
+    if (domainPart.length > 0) {
+      const matchingDomains = domains.filter((domain) =>
+        domain.startsWith(domainPart.toLowerCase())
+      );
 
-    if (matchingDomains.length > 0) {
-      lastMatchingDomains = matchingDomains; // Store the last matching domains
-      suggestions.innerHTML = matchingDomains
-        .map((domain) => {
-          const commonPart = domain.slice(0, domainPart.length);
-          const completionPart = domain.slice(domainPart.length);
-          return `<div class="suggestion">
-                                <span class="suggestion-input">${username}@${commonPart}</span>
-                                <span class="suggestion-completion"><strong>${completionPart}</strong></span>
-                            </div>`;
-        })
-        .join("");
-      suggestions.style.display = "block";
-      emailInput.classList.add("suggestions-visible");
-      selectedIndex = -1;
-    } else if (lastMatchingDomains.length > 0) {
-      // Show the last matching domains if no new matches are found
-      suggestions.innerHTML = lastMatchingDomains
-        .map((domain) => {
-          return `<div class="suggestion">
-                                <span class="suggestion-input">${username}@${domain}</span>
-                            </div>`;
-        })
-        .join("");
-      suggestions.style.display = "block";
-      emailInput.classList.add("suggestions-visible");
+      if (matchingDomains.length > 0) {
+        lastMatchingDomains = matchingDomains; // Store the last matching domains
+        suggestions.innerHTML = matchingDomains
+          .map((domain) => {
+            const commonPart = domain.slice(0, domainPart.length);
+            const completionPart = domain.slice(domainPart.length);
+            return `<div class="suggestion">
+                      <span class="suggestion-input">${username}@${commonPart}</span>
+                      <span class="suggestion-completion"><strong>${completionPart}</strong></span>
+                    </div>`;
+          })
+          .join("");
+        suggestions.style.display = "block";
+        emailInput.classList.add("suggestions-visible");
+        selectedIndex = -1;
+      } else {
+        suggestions.style.display = "none";
+        emailInput.classList.remove("suggestions-visible");
+      }
     } else {
       suggestions.style.display = "none";
       emailInput.classList.remove("suggestions-visible");
