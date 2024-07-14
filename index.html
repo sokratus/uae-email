@@ -18,8 +18,12 @@
         <span class="subtitle">In a snap</span>
       </section>
       <div class="input-container">
+        <div style="position: absolute; left: -9999px">
+          <input type="text" autocomplete="username" />
+          <input type="password" autocomplete="new-password" />
+        </div>
         <label for="emailInput">Email address</label>
-        <input type="email" id="emailInput" autocomplete="off" />
+        <input type="email" id="emailInput" autocomplete="new-email" />
         <div id="errorMessage" class="error-message" style="display: none">
           <img
             src="assets/icon-cross-filled.svg"
@@ -36,8 +40,8 @@
       <!-- New elements added below -->
       <p class="terms">
         When you create an account, you agree to our
-        <a href="#">Terms of Use</a>. Please read our
-        <a href="#">Privacy Notice</a> and <a href="#">Legal notice</a>.
+        <a href="#">Terms of use</a>. Please read our
+        <a href="#">Privacy notice</a> and <a href="#">Legal notice</a>.
       </p>
       <div class="social-login">
         <button class="social-button google">

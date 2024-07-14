@@ -3,7 +3,7 @@ body {
   font-family: HelveticaNow, Helvetica, sans-serif;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: top;
   height: 100vh;
   margin: 0;
   background-color: #fff;
@@ -24,8 +24,8 @@ body {
   }
 }
 .zalando-logo {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
 }
 .titles {
   margin-top: 20px;
@@ -297,9 +297,11 @@ input[type="email"]:focus-visible {
 .terms {
   margin-top: 24px;
   margin-bottom: 24px;
-  font-size: 12px;
+  font-size: 14px;
   color: #000;
-  line-height: 16px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .terms a {
