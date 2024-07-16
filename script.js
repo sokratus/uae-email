@@ -332,7 +332,7 @@ function validateAndContinue() {
 
     const typedEmailElement = document.getElementById("typedEmail");
     if (typedEmailElement) {
-      typedEmailElement.innerHTML = `${username}@<strong>${domain}</strong>`;
+      typedEmailElement.innerHTML = `${username}@<strong>${closestDomain}</strong>`;
     }
 
     modal.style.display = "block"; // Show the modal with the suggested domain
