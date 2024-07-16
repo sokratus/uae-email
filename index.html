@@ -23,7 +23,7 @@
           <input type="password" autocomplete="new-password" />
         </div>
         <label for="emailInput">Email address</label>
-        <input type="email" inputmode="email" id="emailInput" autocomplete="new-email" />
+        <input type="email" inputmode="email" id="emailInput" autocomplete="new-email" form="emailForm" />
         <div id="errorMessage" class="error-message" style="display: none">
           <img
             src="assets/icon-cross-filled.svg"
@@ -35,7 +35,9 @@
         <div class="suggestions" id="suggestions"></div>
       </div>
 
-      <button id="continueButton">Continue</button>
+      <form id="emailForm" action="your-action-url" method="post">
+        <button type="submit" id="continueButton">Continue</button>
+      </form>
 
       <!-- New elements added below -->
       <p class="terms">
