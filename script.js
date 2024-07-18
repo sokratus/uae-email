@@ -338,6 +338,7 @@ function validateAndContinue() {
     modal.style.display = "block"; // Show the modal with the suggested domain
     suggestions.style.display = "none"; // Hide suggestions when modal is shown
     emailInput.classList.remove("suggestions-visible"); // Remove suggestions-visible class
+    emailInput.blur(); // Hide the keyboard on mobile devices and remove focus on desktop
     return; // Exit the function to prevent further execution
   } else if (!validateEmail(email)) {
     showError();
