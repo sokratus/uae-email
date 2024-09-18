@@ -23,7 +23,13 @@
           <input type="password" autocomplete="new-password" />
         </div>
         <label for="emailInput">Email address</label>
-        <input type="email" inputmode="email" id="emailInput" autocomplete="new-email" form="emailForm" />
+        <input
+          type="email"
+          inputmode="email"
+          id="emailInput"
+          autocomplete="new-email"
+          form="emailForm"
+        />
         <div id="errorMessage" class="error-message" style="display: none">
           <img
             src="assets/icon-cross-filled.svg"
@@ -82,7 +88,6 @@
         <img src="assets/icon-cross.svg" alt="Close" class="close" />
         <h2>Did you mean:</h2>
         <div class="email-group">
-          <!-- <p>Email address you typed:</p> -->
           <div id="typedEmail" class="grey-container"></div>
         </div>
         <button id="correctEmail">Correct my email</button>
