@@ -302,7 +302,9 @@ window.addEventListener("keydown", function (e) {
 
 // Validate and continue function
 function validateAndContinue() {
+  console.log("validateAndContinue function called");
   const email = emailInput.value;
+  console.log("Email value:", email);
   const [username, domain] = email.split("@");
 
   if (!domain) {
@@ -364,7 +366,19 @@ function updateSelection(items) {
 }
 
 // Event listener for continue button
-continueButton.addEventListener("click", validateAndContinue);
+continueButton.addEventListener("click", function(event) {
+  console.log("Continue button clicked");
+  event.preventDefault(); // Prevent default form submission
+  console.log("Button type:", this.type);
+  console.log("Button parent:", this.parentElement.tagName);
+  validateAndContinue();
+});
+
+// Prevent form submission
+document.getElementById("emailForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  validateAndContinue();
+});
 
 // Show error message
 function showError() {
